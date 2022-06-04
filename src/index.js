@@ -18,11 +18,16 @@ function onSearch(evt){
         return;
     }
     else {
-        return fetchCountries(countrySearchInput)
-            .then(countries => renderCountries(countries))
-            .catch(error => {
-                console.log(error);
-           Notiflix.Notify.failure('Oops, there is no country with that name');
+        // return fetchCountries(countrySearchInput)
+        //     .then(countries => renderCountries(countries))
+        //     .catch(error => {
+        //         console.log(error);
+        //    Notiflix.Notify.failure('Oops, there is no country with that name');
+        // })
+        return fetchCountries(countrySearchInput).then(countries => {
+            const fiteredCountried = countries.map(country => {
+                return { ...country, languages: country.languages.map(language => language.name), }
+            }); renderCountries(fiteredCountried)
         })
     }
 }
@@ -48,10 +53,16 @@ function renderCountries(countries) {
         `;
         }).join('');
         const detailedDescriptionMarkup = countries.map(({ capital, population, languages }) => {
-            return `<p style="font-size: 20px; font-weight: 700 "> Capital: <span style="font-weight: 400 ">${capital}</span></p>
+            return /*html*/`<p style="font-size: 20px; font-weight: 700 "> Capital: <span style="font-weight: 400 ">${capital}</span></p>
         <p style="font-size: 20px; font-weight: 700 "> Population: <span style="font-weight: 400 ">${population}</span></p>
-        <p style="font-size: 20px; font-weight: 700 "> Languages: <span style="font-weight: 400 ">${languages[0].name}</span></p>`;
+        <p style="font-size: 20px; font-weight: 700 "> Languages: <span style="font-weight: 400 ">${languages}</span></p>`;
         }).join('');
+        // return fetchCountries(countrySearchInput).then(countries => {
+        //     const fiteredCountried = countries.map(country => {
+        //         return { ...country, languages: country.languages.map(language => language.name), }
+        //     }); renderCountries(fiteredCountried)
+        // })
+    
         countryList.innerHTML = descriptionMarkup;
         countryDescription.innerHTML = detailedDescriptionMarkup;
 }
